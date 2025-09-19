@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>TechTopia - Add Product</title>
+        <link rel="stylesheet" href="assets/css/notification.css"><!-- comment -->
+        <style>
+            /* === TechTopia theme (matches index.html) === */
+            :root{
+                --tt-bg:#0f172a;        /* body bg */
+                --tt-card:#111827;      /* panels/cards */
+                --tt-text:#e5e7eb;      /* primary text */
+                --tt-muted:#94a3b8;     /* secondary text */
+                --tt-accent:#22d3ee;    /* cyan accent */
+                --tt-ring:rgba(34,211,238,.35);
+                --tt-green:#a7f3d0;
+                --tt-danger:#ef4444;
+            }
+            body{
+                margin:0;
+                font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+                background:#0b1220;
+                color:var(--tt-text);
+            }
+
+            /* ===== Header (identical to other pages) ===== */
+            header.tt-header{
+                position:sticky;
+                top:0;
+                z-index:40;
+                background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.90));
+                border-bottom:1px solid rgba(255,255,255,.06);
+                backdrop-filter:blur(8px) saturate(140%);
+            }
+            .tt-wrap{
+                max-width:1200px;
+                margin:0 auto;
+                padding:14px 18px;
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+            }
+            .tt-logo{
+                color:var(--tt-text);
+                font-weight:800;
+                font-size:20px;
+                text-decoration:none;
+                letter-spacing:.3px;
+            }
+            .tt-logo::after{
+                content:"";
+                display:inline-block;
+                margin-left:.5rem;
+                width:.5rem;
+                height:.5rem;
+                border-radius:50%;
+                background:var(--tt-accent);
+                box-shadow:0 0 10px var(--tt-accent);
+            }
+            nav ul{
+                display:flex;
+                gap:8px;
+                margin:0;
+                padding:0;
+                list-style:none;
+            }
+            nav a{
+                color:var(--tt-text);
+                text-decoration:none;
+                font-weight:600;
+                padding:9px 12px;
+                border-radius:10px;
+                border:1px solid rgba(255,255,255,.06);
+                background:rgba(255,255,255,.02);
+                transition:background .15s ease, transform .15s ease, box-shadow .15s ease;
+            }
+            nav a:hover{
+                background:rgba(34,211,238,.10);
+                transform:translateY(-1px);
+            }
+            nav a.active{
+                background:rgba(34,211,238,.18);
+                box-shadow:0 0 0 3px var(--tt-ring) inset;
+            }
+
+            /* ===== Page wrap ===== */
+            .page-wrap{
+                max-width:1200px;
+                margin:24px auto;
+                padding:0 20px;
+            }
+
+            /* ===== Form card ===== */
+            .product-form-container{
+                background:var(--tt-card);
+                padding:24px;
+                border-radius:14px;
+                border:1px solid rgba(255,255,255,.06);
+                box-shadow:0 10px 30px rgba(0,0,0,.25);
+                max-width:700px;
+                margin:0 auto;
+            }
+            .product-form-container h2{
+                margin:0 0 16px;
+                font-size:22px;
+                color:var(--tt-text);
+                font-weight:800;
+            }
+            .text-danger{
+                color:var(--tt-danger);
+                font-weight:600;
+                margin:8px 0 14px;
+            }
+
+            .form-row{
+                display:flex;
+                flex-direction:column;
+                margin-bottom:14px;
+            }
+            .form-row label{
+                margin-bottom:6px;
+                font-weight:700;
+                color:var(--tt-text);
+            }
+
+            .form-row input,
+            .form-row select,
+            .form-row textarea{
+                padding:10px 12px;
+                border-radius:10px;
+                font-size:14px;
+                border:1px solid rgba(255,255,255,.10);
+                background:rgba(255,255,255,.03);
+                color:var(--tt-text);
+                outline:none;
+            }
+            .form-row input:focus,
+            .form-row select:focus,
+            .form-row textarea:focus{
+                border-color:transparent;
+                box-shadow:0 0 0 3px var(--tt-ring);
+            }
+            textarea{
+                resize:vertical;
+            }
+
+            .submit-btn{
+                background:var(--tt-accent);
+                color:#001017;
+                border:none;
+                padding:12px 14px;
+                font-weight:800;
+                border-radius:10px;
+                cursor:pointer;
+                margin-top:10px;
+                transition:filter .15s ease;
+            }
+            .submit-btn:hover{
+                filter:brightness(1.07);
+            }
+            /* Make native dropdown list readable on dark theme */
+            .form-row select {
+                color: var(--tt-text);
+                background-color: rgba(255,255,255,.03);
+            }
+
+            .form-row select option,
+            .form-row select optgroup {
+                background-color: var(--tt-card); /* #111827 */
+                color: var(--tt-text);            /* #e5e7eb */
+            }
+
+            /* WebKit tweak so text color sticks inside the popup list */
+            .form-row select,
+            .form-row select option {
+                -webkit-text-fill-color: var(--tt-text);
+            }
+
+            /* Placeholder option (value '0') looks muted */
+            .form-row select option[value="0"] {
+                color: var(--tt-muted);
+            }
+
+        </style>
+    </head>
+
+    <body onload="loadProductData()">
+        <!-- ===== Header ===== -->
+        <header class="tt-header" id="main-header">
+            <div class="tt-wrap">
+                <a href="index.html" class="tt-logo" aria-label="TechTopia Home">TechTopia</a>
+                <nav aria-label="Primary">
+                    <ul>
+                        <li><a id="nav-home" href="index.html">Home</a></li>
+                        <li><a id="nav-profile" href="my-account.html">My Profile</a></li>
+                        <li><a id="nav-search" href="search.html">Search</a></li>
+                        <li><a id="nav-cart" href="cart.html">My Cart</a></li>
+                        <li><a id="nav-about" href="about.html">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="page-wrap">
+            <div class="product-form-container">
+                <h2>Add New Product</h2>
+                <p class="text-danger" id="message"></p>
+
+                <!-- Keep your exact function names & IDs -->
+                <form onsubmit="event.preventDefault(); saveProduct();">
+                    <div class="form-row">
+                        <label for="brand">Brand</label>
+                        <select id="brand" onchange="loadModels()">
+                            <option value="0" >Select</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="model">Model</label>
+                        <select id="model">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="title">Title</label>
+                        <input type="text" id="title">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="description">Description</label>
+                        <textarea id="description" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="storage">Storage</label>
+                        <select id="storage">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="color">Color</label>
+                        <select id="color">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="condition">Condition</label>
+                        <select id="condition">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="price">Price</label>
+                        <input type="number" id="price" value="0.00">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="qty">Quantity</label>
+                        <input type="number" id="qty" value="1" min="1">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="img1">Image 1</label>
+                        <input type="file" id="img1" accept="image/*">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="img2">Image 2</label>
+                        <input type="file" id="img2" accept="image/*">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="img3">Image 3</label>
+                        <input type="file" id="img3" accept="image/*">
+                    </div>
+
+                    <button type="submit" class="submit-btn" >Add Product</button>
+                </form>
+            </div>
+        </div>
+
+        <footer style="background:rgba(15,23,42,.9);color:var(--tt-text);text-align:center;padding:1rem;margin-top:2rem;">
+            <p>&copy; 2025 TechTopia. All rights reserved.</p>
+        </footer>
+
+        <!-- Your original scripts (unchanged) -->
+        <script src="assets/js/product-listing.js"></script>
+        <script src="assets/js/notification.js"></script>
+
+        <script>
+                    // Active nav highlight (same as other pages)
+                    (function () {
+                        const file = (location.pathname.split('/').pop() || '').toLowerCase();
+                        const map = {'index.html': 'nav-home', 'my-account.html': 'nav-profile', 'search.html': 'nav-search', 'cart.html': 'nav-cart', 'about.html': 'nav-about', 'add-product.html': 'nav-profile'};
+                        const id = map[file];
+                        if (id) {
+                            const el = document.getElementById(id);
+                            if (el)
+                                el.classList.add('active');
+                        }
+                    })();
+        </script>
+    </body>
+</html>

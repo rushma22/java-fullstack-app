@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechTopia - Search</title>
+  <link rel="stylesheet" href="assets/css/notification.css">
+  <style>
+    /* === TechTopia theme (matches index.html) === */
+    :root{
+      --tt-bg:#0f172a;
+      --tt-panel:#111827;
+      --tt-text:#e5e7eb;
+      --tt-muted:#94a3b8;
+      --tt-accent:#22d3ee;
+      --tt-ring:rgba(34,211,238,.35);
+      --tt-green:#a7f3d0;
+    }
+    body{
+      margin:0;
+      background:#0b1220;
+      font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+      color:var(--tt-text);
+    }
+
+    /* ==== Header (identical to index) ==== */
+    header.tt-header{
+      position:sticky; top:0; z-index:40;
+      background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.90));
+      border-bottom:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(8px) saturate(140%);
+    }
+    .tt-wrap{ max-width:1200px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
+    .tt-logo{ color:var(--tt-text); font-weight:800; font-size:20px; text-decoration:none; letter-spacing:.3px; }
+    .tt-logo::after{ content:""; display:inline-block; margin-left:.5rem; width:.5rem; height:.5rem; border-radius:50%; background:var(--tt-accent); box-shadow:0 0 10px var(--tt-accent); }
+    nav ul{ display:flex; gap:8px; margin:0; padding:0; list-style:none; }
+    nav a{
+      color:var(--tt-text); text-decoration:none; font-weight:600;
+      padding:9px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.02); transition:background .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    nav a:hover{ background:rgba(34,211,238,.10); transform:translateY(-1px); }
+    nav a.active{ background:rgba(34,211,238,.18); box-shadow:0 0 0 3px var(--tt-ring) inset; }
+
+    /* ==== Layout ==== */
+    .search-container{
+      max-width:1300px; margin:32px auto;
+      display:grid; grid-template-columns:280px 1fr; gap:26px; padding:0 20px;
+    }
+
+    /* ==== Filters panel (keep same IDs) ==== */
+    .filter-panel{
+      background:var(--tt-panel); border-radius:14px; padding:20px;
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .filter-panel h6{
+      font-weight:700; margin:18px 0 10px; font-size:14px; color:var(--tt-text);
+    }
+    .filter-panel ul{ list-style:none; padding:0; margin:0; }
+    .filter-panel ul li{
+      padding:8px 12px; margin:0 8px 8px 0; border-radius:10px; cursor:pointer;
+      transition:all .15s ease; background:rgba(255,255,255,.04); display:inline-block; color:var(--tt-text);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .filter-panel ul li:hover{ background:rgba(34,211,238,.10); }
+    .filter-panel ul li.chosen{
+      background:rgba(34,211,238,.18);
+      box-shadow:0 0 0 3px var(--tt-ring) inset;
+    }
+    .filter-panel button{
+      width:100%; margin-top:12px; padding:10px; border:none; border-radius:10px; font-weight:700; cursor:pointer;
+    }
+    .btn-dark{ background:var(--tt-accent); color:#001017; }
+    .btn-outline-secondary{
+      background:transparent; border:2px solid rgba(148,163,184,.7); color:var(--tt-muted);
+    }
+    .btn-outline-secondary:hover{ background:rgba(148,163,184,.12); }
+
+    /* color square */
+    #color-options li a{
+      display:inline-block; width:25px; height:25px; border-radius:6px; border:2px solid rgba(255,255,255,.2);
+    }
+
+    /* price inputs */
+    .form-control{
+      width:100%; padding:10px; border-radius:10px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.03); color:var(--tt-text);
+      box-sizing:border-box;
+    }
+
+    /* ==== Products area ==== */
+    .product-area{ display:flex; flex-direction:column; }
+    .product-header{
+      display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;
+    }
+    .product-header .count{ color:var(--tt-muted); }
+    .form-select{
+      padding:8px 10px; border-radius:10px; background:rgba(255,255,255,.03);
+      color:grey; border:1px solid rgba(255,255,255,.1);
+    }
+
+    .product-grid{
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:18px;
+    }
+    .product-card{
+      background:var(--tt-panel); border-radius:16px; padding:14px;
+      border:1px solid rgba(255,255,255,.06);
+      transition:transform .15s ease, box-shadow .15s ease;
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .product-card:hover{ transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    .product-card img{ width:100%; border-radius:8px; margin-bottom:10px; background:rgba(255,255,255,.03); }
+    .product-card h6{ font-weight:700; font-size:16px; margin:0; color:var(--tt-text); }
+    .product-card .price{ color:var(--tt-green); font-weight:800; font-size:15px; margin:10px 0; }
+
+    .product-card .actions{ margin-top:auto; display:flex; justify-content:space-between; gap:8px; }
+    .btn-sm{ padding:8px 10px; font-size:13px; border-radius:10px; text-decoration:none; }
+    .btn-outline-success{ border:1px solid #22c55e; color:#22c55e; background:transparent; }
+    .btn-outline-success:hover{ background:#22c55e; color:#001b0f; }
+    .btn-link{ color:#7dd3fc; }
+
+    /* pagination */
+    #st-pagination-container{ text-align:center; margin-top:24px; }
+    #st-pagination-container .btn{
+      margin:0 5px; padding:8px 16px; border-radius:10px; font-weight:800;
+      background:transparent; border:1px solid rgba(255,255,255,.2); color:var(--tt-text);
+    }
+    #st-pagination-container .btn:hover{ background:rgba(34,211,238,.10); }
+
+    @media (max-width: 768px){
+      .search-container{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body onload="loadData();">
+  <!-- ===== Header (same as index) ===== -->
+  <header class="tt-header" id="main-header">
+    <div class="tt-wrap">
+      <a href="index.html" class="tt-logo" aria-label="TechTopia Home">TechTopia</a>
+      <nav aria-label="Primary">
+        <ul>
+         <li><a id="nav-home" href="index.html">Home</a></li>
+          <li><a id="nav-profile" href="my-account.html">My Profile</a></li>
+          <li><a id="nav-search" href="search.html">Search</a></li>
+          <li><a id="nav-cart" href="cart.html">My Cart</a></li>
+          <li><a id="nav-about" href="about.html">About Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="search-container">
+    <!-- Filters (IDs unchanged) -->
+    <div class="filter-panel">
+      <h6>Brand</h6>
+      <ul id="brand-options">
+        <li id="brand-li"><a id="brand-a">Apple</a></li>
+      </ul>
+
+      <h6>Condition</h6>
+      <ul id="condition-options">
+        <li id="condition-li"><a id="condition-a">New</a></li>
+      </ul>
+
+      <h6>Color</h6>
+      <ul id="color-options">
+        <li id="color-li"><a id="color-a" style="background:red;"></a></li>
+      </ul>
+
+      <h6>Storage</h6>
+      <ul id="storage-options">
+        <li id="storage-li"><a id="storage-a">128 GB</a></li>
+      </ul>
+
+      <h6>Price</h6>
+      <form>
+        <div id="slider-range"></div>
+        <input type="number" id="price_start" class="form-control mt-2" placeholder="Min" style="margin-bottom: 10px">
+        <input type="number" id="price_end" class="form-control mt-2" placeholder="Max">
+      </form>
+
+      <button class="btn btn-dark mt-3" onclick="searchProduct(0);">Apply Filters</button>
+      <button class="btn btn-outline-secondary mt-2" onclick="resetAllFilters()">Reset All</button>
+    </div>
+
+    <!-- Product Results -->
+    <div class="product-area">
+      <div class="product-header">
+        <div class="count">Showing <span id="all-item-count">0</span> results</div>
+        <select id="st-sort" class="form-select w-auto">
+          <option>Sort by Latest</option>
+          <option>Sort by Oldest</option>
+          <option>Sort by Name</option>
+          <option>Sort by Price</option>
+        </select>
+      </div>
+
+      <div class="product-grid" id="st-product-container">
+        <!-- Template card (IDs kept) -->
+        <div class="product-card" id="st-product">
+          <a id="st-product-a-1" href="#">
+            <img src="assets/images/product/product-01.jpg" id="st-product-img-1" alt="Product">
+          </a>
+          <h6 id="st-product-title-1">Apple iPhone 15 Pro</h6>
+          <div class="price">Rs. <span id="st-product-price-1">350,000.00</span></div>
+          <div class="actions">
+            <a href="#" id="st-product-add-to-cart" class="btn btn-sm btn-outline-success">Add to Cart</a>
+            <a href="#" id="st-product-a-2" class="btn btn-sm btn-link text-secondary"><i class="far fa-eye"></i> View</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="st-pagination-container" class="mt-4">
+        <a href="#" id="st-pagination-button" class="btn btn-outline-primary">Prev</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Your original scripts (unchanged names/paths) -->
+
+
+  <script>
+    // Keep your onload
+    function loadData(){ /* your existing loader in assets/js/search.js will run; this stays to match your pattern */ }
+
+    // Active nav highlighting (same as index)
+    (function(){
+      const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      const map = { 'index.html':'nav-home', 'my-account.html':'nav-profile','cart.html':'nav-cart', 'about.html':'nav-about', 'search.html':'nav-search' };
+      const id = map[file]; if(id){ const el = document.getElementById(id); el && el.classList.add('active'); }
+    })();
+
+    // Delegate clicks for filter chips (works even when replaced dynamically)
+    ['brand','condition','color','storage'].forEach(prefix=>{
+      const ul = document.getElementById(prefix + '-options');
+      if(!ul) return;
+      ul.addEventListener('click', function(e){
+        const li = e.target.closest('li');
+        if(!li) return;
+        ul.querySelectorAll('li').forEach(o=>o.classList.remove('chosen'));
+        li.classList.add('chosen');
+      });
+    });
+
+    // ✅ Reset All (keeps your IDs/functions; no backend changes)
+    function resetAllFilters(){
+      // clear chosen on all filter lists
+      ['brand','condition','color','storage'].forEach(prefix=>{
+        const ul = document.getElementById(prefix + '-options');
+        if(!ul) return;
+        ul.querySelectorAll('li').forEach(o=>o.classList.remove('chosen'));
+      });
+
+      // reset price inputs
+      const ps = document.getElementById('price_start');
+      const pe = document.getElementById('price_end');
+      if(ps) ps.value = '';
+      if(pe) pe.value = '';
+
+      // reset sort to first option
+      const sort = document.getElementById('st-sort');
+      if(sort) sort.selectedIndex = 0;
+
+      // if you use a jQuery UI slider or similar, try to reset its range safely without renaming:
+      if(window.$ && $('#slider-range').slider){ // only if available
+        try{ $('#slider-range').slider('values', [0, 0]); }catch(e){}
+      }
+
+      // re-run your search with first page
+      if(typeof searchProduct === 'function'){
+        searchProduct(0);
+      }
+    }
+  </script>
+    <script src="assets/js/search.js"></script>
+  <script src="assets/js/notification.js"></script>
+</body>
+</html>

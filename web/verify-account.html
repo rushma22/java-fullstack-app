@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechTopia - Verify Account</title>
+  <link rel="icon" href="assets/images/favicon.png" />
+  <style>
+    /* TechTopia Dark Theme */
+    :root{
+      --tt-bg:#0f172a;
+      --tt-card:#111827;
+      --tt-text:#e5e7eb;
+      --tt-muted:#94a3b8;
+      --tt-accent:#22d3ee;
+      --tt-ring:rgba(34,211,238,.35);
+      --tt-danger:#ef4444;
+    }
+
+    body{
+      margin:0;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background:var(--tt-bg);
+      color:var(--tt-text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    .verify-container{
+      background:var(--tt-card);
+      width:100%;
+      max-width:480px;
+      border-radius:14px;
+      padding:40px 30px;
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 12px 30px rgba(0,0,0,.4);
+      box-sizing:border-box;
+    }
+
+    .verify-container h2{
+      text-align:center;
+      margin:0 0 10px;
+      font-size:26px;
+      font-weight:800;
+      color:var(--tt-text);
+    }
+
+    .verify-container p.subtitle{
+      text-align:center;
+      color:var(--tt-muted);
+      margin-bottom:22px;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .error-message{
+      display:none; /* shown by JS */
+      background:rgba(239,68,68,.12);
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.45);
+      padding:10px 12px;
+      border-radius:10px;
+      font-size:14px;
+      margin-bottom:18px;
+    }
+
+    .form-group{ margin-bottom:18px; }
+    .form-group label{
+      display:block; margin-bottom:6px; color:var(--tt-text); font-size:14px; font-weight:600;
+    }
+    .form-group input{
+      width:100%; padding:12px 14px; border-radius:10px; font-size:15px;
+      border:1px solid rgba(255,255,255,.1);
+      background:rgba(255,255,255,.03); color:var(--tt-text);
+      transition:box-shadow .15s ease; box-sizing:border-box;
+    }
+    .form-group input:focus{
+      border-color:transparent; outline:none; box-shadow:0 0 0 3px var(--tt-ring);
+    }
+
+    .btn-primary{
+      width:100%; padding:14px; border:none; border-radius:10px;
+      background:var(--tt-accent); color:#001017;
+      font-size:16px; font-weight:700; cursor:pointer;
+      transition:filter .15s ease;
+    }
+    .btn-primary:hover{ filter:brightness(1.07); }
+
+    .back-link{
+      text-align:center; margin-top:22px; font-size:14px; color:var(--tt-muted);
+    }
+    .back-link a{ color:#7dd3fc; text-decoration:none; }
+    .back-link a:hover{ text-decoration:underline; }
+
+    @media (max-width:480px){
+      .verify-container{ padding:30px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-container">
+    <h2>Verify Your Account</h2>
+    <p class="subtitle">
+      Please enter the verification code sent to your email to complete your account setup.
+    </p>
+
+    <div class="error-message" id="message"></div>
+
+    <form>
+      <div class="form-group">
+        <label for="verificationCode">Verification Code</label>
+        <input type="text" id="verificationCode" placeholder="Enter your code" />
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="btn-primary" onclick="verifyAccount()">Verify &amp; Continue</button>
+      </div>
+    </form>
+
+    <div class="back-link">
+      Already verified? <a href="sign-in.html">Sign In</a>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="assets/js/verify-account.js"></script>
+</body>
+</html>

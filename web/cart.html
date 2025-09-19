@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shopping Cart - TechTopia</title>
+  <link rel="stylesheet" href="assets/css/notification.css">
+  <style>
+    /* === TechTopia Dark Theme === */
+    :root{
+      --tt-bg:#0f172a;
+      --tt-card:#111827;
+      --tt-text:#e5e7eb;
+      --tt-muted:#94a3b8;
+      --tt-accent:#22d3ee;
+      --tt-ring:rgba(34,211,238,.35);
+      --tt-green:#a7f3d0;
+      --tt-red:#f87171;
+    }
+    body{
+      margin:0;
+      font-family:'Segoe UI',system-ui,sans-serif;
+      background:var(--tt-bg);
+      color:var(--tt-text);
+      padding:20px;
+    }
+
+    /* Header (same as other pages) */
+    header.tt-header{
+      position:sticky; top:0; z-index:40;
+      background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.90));
+      border-bottom:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(8px) saturate(140%);
+      margin:-20px -20px 20px; /* pull to page edges since body has padding */
+      padding:0 20px;
+    }
+    .tt-wrap{ max-width:1200px; margin:0 auto; padding:14px 0; display:flex; align-items:center; justify-content:space-between; }
+    .tt-logo{ color:var(--tt-text); font-weight:800; font-size:20px; text-decoration:none; letter-spacing:.3px; }
+    .tt-logo::after{ content:""; display:inline-block; margin-left:.5rem; width:.5rem; height:.5rem; border-radius:50%; background:var(--tt-accent); box-shadow:0 0 10px var(--tt-accent); }
+    nav ul{ display:flex; gap:8px; margin:0; padding:0; list-style:none; }
+    nav a{
+      color:var(--tt-text); text-decoration:none; font-weight:600;
+      padding:9px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.02); transition:background .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    nav a:hover{ background:rgba(34,211,238,.10); transform:translateY(-1px); }
+    nav a.active{ background:rgba(34,211,238,.18); box-shadow:0 0 0 3px var(--tt-ring) inset; }
+
+    .cart-container{
+      max-width:1100px;
+      margin:0 auto;
+      background:var(--tt-card);
+      padding:24px;
+      border-radius:12px;
+      box-shadow:0 0 20px rgba(0,0,0,.3);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .cart-container h2{
+      margin-top:0;
+      font-size:1.6rem;
+      font-weight:800;
+      color:var(--tt-text);
+      margin-bottom:20px;
+    }
+
+    table{ width:100%; border-collapse:collapse; }
+    thead{ background:rgba(34,211,238,.1); }
+    thead th{
+      padding:14px; color:var(--tt-accent); text-align:center; font-weight:700; font-size:14px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    tbody td{
+      padding:14px; text-align:center; border-bottom:1px solid rgba(255,255,255,.05); font-size:14px;
+    }
+
+    .product-thumbnail img{
+      width:60px; border-radius:6px; border:1px solid rgba(255,255,255,.08);
+    }
+    .quantity-input{
+      width:60px; padding:6px; text-align:center; border-radius:6px;
+      border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.05); color:var(--tt-text);
+    }
+    .quantity-input:focus{ border-color:var(--tt-accent); outline:none; box-shadow:0 0 0 2px var(--tt-ring); }
+
+    .remove-wishlist{ color:var(--tt-red); cursor:pointer; font-size:16px; }
+
+    .cart-summary{ text-align:right; margin-top:20px; font-size:15px; color:var(--tt-muted); }
+    .cart-summary span{ font-weight:700; color:var(--tt-text); }
+
+    .checkout-btn{
+      display:inline-block; margin-top:10px; padding:10px 16px;
+      background:var(--tt-accent); color:#001017; font-weight:700; border-radius:8px; text-decoration:none; transition:filter .2s ease;
+    }
+    .checkout-btn:hover{ filter:brightness(1.1); }
+    /* Remove column & button */
+.product-remove{ width:120px; }
+.tt-delete-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 12px; border-radius:10px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:var(--tt-red); font-weight:700; font-size:14px;
+  cursor:pointer; user-select:none;
+  transition:box-shadow .15s ease, transform .08s ease, border-color .15s ease;
+}
+.tt-delete-btn:hover{ border-color:var(--tt-red); box-shadow:0 0 0 3px rgba(248,113,113,.18); }
+.tt-delete-btn:active{ transform:scale(.97); }
+
+  </style>
+</head>
+<body onload="loadCartItems()">
+  <!-- Header -->
+  <header class="tt-header" id="main-header">
+    <div class="tt-wrap">
+      <a href="index.html" class="tt-logo" aria-label="TechTopia Home">TechTopia</a>
+      <nav aria-label="Primary">
+        <ul>
+         <li><a id="nav-home" href="index.html">Home</a></li>
+          <li><a id="nav-profile" href="my-account.html">My Profile</a></li>
+          <li><a id="nav-search" href="search.html">Search</a></li>
+          <li><a id="nav-cart" href="cart.html">My Cart</a></li>
+          <li><a id="nav-about" href="about.html">About Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="cart-container">
+    <h2>Your Shopping Cart</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Remove</th>
+          <th>Image</th>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody id="cart-item-container">
+        <!-- Items from JS -->
+      </tbody>
+    </table>
+    <div class="cart-summary">
+      Total Items: <span id="order-total-quantity">0</span><br>
+      Total Price: <span class="currency-symbol">Rs. </span><span id="order-total-amount">0.00</span><br>
+      <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+    </div>
+  </div>
+
+  <script src="assets/js/cart.js"></script>
+  <script src="assets/js/notification.js"></script>
+  <script>
+    // Highlight active nav
+    (function(){
+      const file = (location.pathname.split('/').pop() || '').toLowerCase();
+      const map = { 'index.html':'nav-home', 'my-account.html':'nav-profile','search.html':'nav-search' , 'about.html':'nav-about', 'cart.html':'nav-cart' };
+      const id = map[file]; if(id){ const el = document.getElementById(id); if(el) el.classList.add('active'); }
+    })();
+  </script>
+</body>
+</html>

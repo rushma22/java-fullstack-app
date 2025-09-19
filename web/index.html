@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home | TechTopia</title>
+  <style>
+    :root{
+      --tt-bg:#0f172a;
+      --tt-panel:#111827;
+      --tt-text:#e5e7eb;
+      --tt-muted:#94a3b8;
+      --tt-accent:#22d3ee;
+      --tt-ring:rgba(34,211,238,.35);
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0b1220;
+    }
+
+    /* ===== Header ===== */
+    header.tt-header {
+      position: sticky; top: 0; z-index: 40;
+      background: linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.9));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      backdrop-filter: blur(8px) saturate(140%);
+    }
+    .tt-wrap { max-width: 1200px; margin: 0 auto; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+    .tt-logo { color: var(--tt-text); font-weight: 800; font-size: 20px; text-decoration: none; letter-spacing:.3px }
+    .tt-logo::after{ content:""; display:inline-block; margin-left:.5rem; width:.5rem; height:.5rem; border-radius:50%; background:var(--tt-accent); box-shadow:0 0 10px var(--tt-accent) }
+    nav ul { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    nav a {
+      color: var(--tt-text); text-decoration: none; font-weight: 600;
+      padding: 9px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.02);
+      transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    nav a:hover { background: rgba(34,211,238,.10); transform: translateY(-1px); }
+    nav a.active { background: rgba(34,211,238,.18); box-shadow: 0 0 0 3px var(--tt-ring) inset; }
+
+    /* ===== Sections ===== */
+    .brand-section, .new-arrivals-section, .grouped-section { padding: 34px 18px; }
+    .section-title { font-size: 22px; margin: 0 0 18px; color: var(--tt-text); text-align: center; font-weight: 800; letter-spacing:.3px }
+
+    .brands-container,
+    .products-container {
+      display: flex; flex-wrap: wrap; gap: 18px; justify-content: center;
+    }
+
+    .brand-card {
+      background: var(--tt-panel);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 12px;
+      padding: 14px 18px;
+      min-width: 150px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+      color: var(--tt-text);
+    }
+    .brand-card:hover {
+      transform: translateY(-3px);
+      background-color: rgba(34,211,238,.06);
+      box-shadow: 0 6px 16px rgba(0,0,0,.25);
+    }
+
+    .product-card {
+      background: var(--tt-panel);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.06);
+      overflow: hidden;
+      max-width: 250px;
+      display: flex;
+      flex-direction: column;
+    }
+    .product-card img { width: 100%; height: 160px; object-fit: cover; background: rgba(255,255,255,.03); }
+    .product-card .details { padding: 14px; }
+    .product-card h4 { margin: 0; font-size: 16px; color: var(--tt-text); line-height: 1.3; }
+    .product-card .price { margin-top: 8px; color: #a7f3d0; font-weight: 800; }
+
+    .product-card .actions {
+      display: flex; justify-content: space-between; gap:10px;
+      padding: 10px 14px; border-top: 1px solid rgba(255,255,255,.06);
+      background: rgba(255,255,255,.02);
+    }
+    .product-card .actions a { text-decoration: none; color: #7dd3fc; font-size: 14px; }
+
+    /* ===== Grouped by Brand ===== */
+    .tt-brand-block{
+      max-width: 1200px; margin: 22px auto; border:1px solid rgba(255,255,255,.06);
+      border-radius: 16px; overflow: hidden; background: linear-gradient(180deg, rgba(17,24,39,.6), rgba(17,24,39,.35));
+    }
+    .tt-brand-head{ display:flex; align-items:center; justify-content:space-between; padding: 12px 16px; border-bottom:1px solid rgba(255,255,255,.06) }
+    .tt-brand-name{ color: #fff; font-weight:800; }
+    .tt-count{ color: var(--tt-muted); font-weight:600; }
+    .tt-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; padding: 14px; }
+
+    /* keep light fallback background for empty pages */
+    .light-fallback { background: #f4f6f8; }
+    @media (max-width:640px){
+      .tt-wrap{ padding: 12px 14px; }
+      .section-title{ font-size: 20px; }
+    }
+  </style>
+</head>
+
+<body onload="indexOnloadFunctions()">
+  <!-- ===== HEADER ===== -->
+  <header class="tt-header" id="main-header">
+    <div class="tt-wrap">
+      <a href="index.html" class="tt-logo" aria-label="TechTopia Home">TechTopia</a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a id="nav-home" href="index.html">Home</a></li>
+          <li><a id="nav-profile" href="my-account.html">My Profile</a></li>
+          <li><a id="nav-search" href="search.html">Search</a></li>
+          <li><a id="nav-cart" href="cart.html">My Cart</a></li>
+          <li><a id="nav-about" href="about.html">About Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== BRANDS SECTION (UNCHANGED IDs) ===== -->
+  <section class="brand-section">
+    <h2 class="section-title">Explore By Popular Brands</h2>
+    <div class="brands-container" id="product-brand-container">
+      <!-- Brand cards will be loaded here -->
+    </div>
+
+    <!-- Hidden Template -->
+    <div id="product-brand-card" style="display:none;">
+      <div class="brand-card" id="product-brand-mini-card">        <a id="product-brand-a" href="#">
+          <span id="product-brand-title" style="text-decoration: none;
+                color: #a7f3d0">Brand Name</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+ 
+
+  <!-- ===== NEW ARRIVALS (UNCHANGED IDs) ===== -->
+  <section class="new-arrivals-section">
+    <h2 class="section-title">New Arrivals</h2>
+    <div class="products-container" id="new-arrival-product-container">
+      <!-- Products loaded dynamically -->
+    </div>
+  </section>
+
+  <!-- Scripts (UNCHANGED) -->
+  <script src="assets/js/notification.js"></script>
+  <script src="assets/js/index.js"></script>
+
+  <!-- Small helper for grouped rendering (frontend-only; does not rename any existing functions) -->
+  <script>
+    // highlight active nav without touching backend
+    (function(){
+      const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+      const map = { 'index.html':'nav-home', 'my-account.html':'nav-profile','cart.html':'nav-cart', 'search.html':'nav-search', 'about.html':'nav-about' };
+      const id = map[file]; if(id){ const el = document.getElementById(id); el && el.classList.add('active'); }
+    })();
+
+    // Call this from your existing load once you have the product array.
+    // It DOES NOT replace your functions; it's just a renderer.
+    window.renderGroupedProducts = function(products){
+      const host = document.getElementById('brand-grouped-container');
+      const tpl = document.getElementById('brand-group-template');
+      if(!host || !tpl || !Array.isArray(products)) return;
+
+      // group by common brand shapes without changing backend
+      const groups = new Map();
+      products.forEach(p=>{
+        const b = (p.brand && (p.brand.name || p.brand.title)) || p.brandName || p.brand || 'Other';
+        if(!groups.has(b)) groups.set(b, []);
+        groups.get(b).push(p);
+      });
+
+      host.innerHTML = '';
+      for(const [brand, items] of groups.entries()){
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.tt-brand-name').textContent = brand;
+        node.querySelector('.tt-count').textContent = `${items.length} item${items.length!==1?'s':''}`;
+        const grid = node.querySelector('.tt-grid');
+
+        items.forEach(p=>{
+          const id = p.id ?? p.productId ?? p._id;
+          const title = p.title || p.name || 'Product';
+          const price = (typeof p.price === 'number') ? p.price : (p.price?.amount ?? p.price);
+          const img = p.mainImage || p.image || (id ? `product-images/${id}/image1.png` : '');
+
+          const card = document.createElement('article');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <img loading="lazy" src="${img}" alt="${title}">
+            <div class="details">
+              <h4>${title}</h4>
+              <div class="price">${formatLKR(price)}</div>
+            </div>
+            <div class="actions">
+              <a href="single-product.html?id=${encodeURIComponent(id)}">View</a>
+              <a href="#" data-id="${id}" class="add-to-cart">Add to Cart</a>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        host.appendChild(node);
+      }
+
+      // delegate add-to-cart to existing function if present
+      host.addEventListener('click', function(e){
+        const a = e.target.closest('.add-to-cart');
+        if(!a) return;
+        e.preventDefault();
+        const id = a.getAttribute('data-id');
+        if(typeof addToCart === 'function'){ addToCart(id); }
+        else { console.warn('addToCart(id) not found'); }
+      });
+    };
+
+    function formatLKR(p){
+      if(p == null || p === '') return '';
+      const n = Number(p);
+      if(Number.isNaN(n)) return p;
+      try{ return new Intl.NumberFormat(undefined,{style:'currency',currency:'LKR',maximumFractionDigits:0}).format(n); }
+      catch{ return 'LKR ' + n.toLocaleString(); }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechTopia - Sign In</title>
+  <style>
+    /* === TechTopia theme (matches index.html) === */
+    :root{
+      --tt-bg:#0f172a;        /* body bg */
+      --tt-card:#111827;      /* panels/cards */
+      --tt-text:#e5e7eb;      /* primary text */
+      --tt-muted:#94a3b8;     /* secondary text */
+      --tt-accent:#22d3ee;    /* cyan accent */
+      --tt-ring:rgba(34,211,238,.35);
+      --tt-danger:#ef4444;
+    }
+    body{
+      margin:0;
+      font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+      background:#0b1220;
+      color:var(--tt-text);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* ===== Header (same as other pages) ===== */
+    header.tt-header{
+      position:sticky; top:0; z-index:40;
+      background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.90));
+      border-bottom:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(8px) saturate(140%);
+    }
+    .tt-wrap{ max-width:1200px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
+    .tt-logo{ color:var(--tt-text); font-weight:800; font-size:20px; text-decoration:none; letter-spacing:.3px; }
+    .tt-logo::after{ content:""; display:inline-block; margin-left:.5rem; width:.5rem; height:.5rem; border-radius:50%; background:var(--tt-accent); box-shadow:0 0 10px var(--tt-accent); }
+    nav ul{ display:flex; gap:8px; margin:0; padding:0; list-style:none; }
+    nav a{
+      color:var(--tt-text); text-decoration:none; font-weight:600;
+      padding:9px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.02);
+      transition:background .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    nav a:hover{ background:rgba(34,211,238,.10); transform:translateY(-1px); }
+    nav a.active{ background:rgba(34,211,238,.18); box-shadow:0 0 0 3px var(--tt-ring) inset; }
+
+    /* ===== Auth Layout ===== */
+    .auth-wrap{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .login-container{
+      background:var(--tt-card);
+      width:100%;
+      max-width:440px;
+      padding:28px 22px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      box-sizing:border-box;
+    }
+    .login-container h2{
+      margin:0 0 18px;
+      font-size:24px;
+      color:var(--tt-text);
+      text-align:center;
+      font-weight:800;
+    }
+
+    .error-message{
+      display:none; /* shown by JS when needed */
+      background:rgba(239,68,68,.12);
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.45);
+      padding:10px 12px; border-radius:10px; font-size:14px;
+      margin-bottom:14px;
+    }
+
+    .form-group{ margin-bottom:14px; }
+    .form-group label{
+      display:block; margin-bottom:6px; color:var(--tt-text); font-size:14px; font-weight:700;
+    }
+    .form-group input{
+      width:100%; padding:12px 12px; border-radius:10px; font-size:15px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03); color:var(--tt-text);
+      outline:none; transition:box-shadow .15s ease;
+      box-sizing:border-box;
+    }
+    .form-group input:focus{
+      border-color:transparent;
+      box-shadow:0 0 0 3px var(--tt-ring);
+    }
+
+    #login-btn{
+      width:100%; padding:12px 14px; border:none; border-radius:10px;
+      background:var(--tt-accent); color:#001017; cursor:pointer;
+      font-weight:800; font-size:16px; transition:filter .15s ease;
+    }
+    #login-btn:hover{ filter:brightness(1.07); }
+
+    .login-links{
+      margin-top:16px; text-align:center; font-size:14px; color:var(--tt-muted);
+    }
+    .login-links a{
+      color:#7dd3fc; text-decoration:none; margin:0 10px;
+    }
+    .login-links a:hover{ text-decoration:underline; }
+
+    footer{
+      background:rgba(15,23,42,.9); color:var(--tt-text);
+      text-align:center; padding:12px; font-size:14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+ 
+
+  <!-- Auth -->
+  <div class="auth-wrap">
+    <div class="login-container">
+      <h2>Sign In</h2>
+
+      <div class="error-message" id="message"></div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" />
+      </div>
+
+      <button id="login-btn" onclick="signIn()">Sign In</button>
+
+      <div class="login-links">
+        <!--<a href="verify-account.html">Forgot Password?</a>-->
+       New member? <a href="sign-up.html">Create Account</a>
+      </div>
+      <div class="login-links">
+        <!--<a href="verify-account.html">Forgot Password?</a>-->
+       Admin? <a href="admin-login.html">Log in</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 TechTopia. All rights reserved.</p>
+  </footer>
+
+  <script src="assets/js/sign-in.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechTopia - Sign Up</title>
+  <link rel="icon" href="assets/images/favicon.png" />
+  <style>
+    /* TechTopia Dark Theme */
+    :root {
+      --tt-bg: #0f172a;
+      --tt-card: #111827;
+      --tt-text: #e5e7eb;
+      --tt-muted: #94a3b8;
+      --tt-accent: #22d3ee;
+      --tt-ring: rgba(34, 211, 238, 0.35);
+      --tt-danger: #ef4444;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--tt-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--tt-text);
+    }
+
+    .signup-container {
+      background: var(--tt-card);
+      width: 100%;
+      max-width: 500px;
+      border-radius: 14px;
+      padding: 40px 30px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-sizing: border-box;
+    }
+
+    .signup-container h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--tt-text);
+    }
+
+    .signup-container p.subtitle {
+      text-align: center;
+      color: var(--tt-muted);
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--tt-text);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--tt-text);
+      transition: box-shadow 0.15s ease;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      border-color: transparent;
+      box-shadow: 0 0 0 3px var(--tt-ring);
+      outline: none;
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.12);
+      color: #fecaca;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: var(--tt-accent);
+      color: #001017;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.07);
+    }
+
+    .already-account {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--tt-muted);
+    }
+
+    .already-account a {
+      color: #7dd3fc;
+      text-decoration: none;
+    }
+
+    .already-account a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .signup-container {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2>Create Account</h2>
+    <p class="subtitle">Create a TechTopia account to manage your products and trades easily.</p>
+
+    <div class="error-message" id="message"></div>
+
+    <form>
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" placeholder="Enter your first name" />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" placeholder="Enter your last name" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" />
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="btn-primary" onclick="signUp()">Create Account</button>
+      </div>
+    </form>
+
+    <div class="already-account">
+      Already a member? <a href="sign-in.html">Sign In</a>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="assets/js/sign-up.js"></script>
+</body>
+</html>

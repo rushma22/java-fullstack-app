@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechTopia Admin</title>
+  <link rel="stylesheet" href="assets/css/notification.css">
+  <style>
+    :root{
+      --tt-bg:#0f172a; --tt-panel:#111827; --tt-text:#e5e7eb; --tt-muted:#94a3b8;
+      --tt-accent:#22d3ee; --tt-ring:rgba(34,211,238,.35);
+      --tt-green:#34d399; --tt-red:#f87171; --tt-amber:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0b1220;color:var(--tt-text)}
+
+    /* Header */
+    header{
+      position:sticky;top:0;z-index:50;
+      background:linear-gradient(180deg,rgba(15,23,42,.98),rgba(15,23,42,.92));
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
+      backdrop-filter:blur(8px) saturate(140%);
+    }
+    .logo{color:var(--tt-text);text-decoration:none;font-weight:800;letter-spacing:.3px}
+    .logo::after{content:"";display:inline-block;margin-left:.5rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--tt-accent);box-shadow:0 0 10px var(--tt-accent)}
+    .header-right{display:flex;gap:8px;align-items:center}
+    .hdr-pill{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);border-radius:999px;padding:6px 10px;font-weight:600}
+
+    /* Layout */
+    .layout{display:grid;grid-template-columns: 260px 1fr; gap:0; min-height: calc(100vh - 56px);}
+    @media (max-width: 880px){
+      .layout{grid-template-columns: 1fr}
+      aside{position:sticky;top:56px;z-index:40}
+    }
+
+    /* Sidebar */
+    aside{
+      background:var(--tt-panel);
+      border-right:1px solid rgba(255,255,255,.06);
+      padding:16px 10px;
+    }
+    .menu-title{font-size:12px;color:var(--tt-muted);letter-spacing:.2px;margin:6px 12px 10px}
+    .menu{display:flex;flex-direction:column;gap:6px}
+    .menu a{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:10px; text-decoration:none; color:var(--tt-text);
+      border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.02);
+      transition: background .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    .menu a:hover{background:rgba(34,211,238,.12); transform: translateY(-1px)}
+    .menu a.active{background:rgba(34,211,238,.20); box-shadow:0 0 0 3px var(--tt-ring) inset}
+    .badge{margin-left:auto;font-size:11px;border:1px solid rgba(255,255,255,.12);padding:2px 8px;border-radius:999px;color:var(--tt-muted)}
+
+    /* Content */
+    main{padding:20px}
+    .card{background:var(--tt-panel); border:1px solid rgba(255,255,255,.06); border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:14px 16px}
+    .toolbar .title{font-weight:800;font-size:20px}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .filters input,.filters select{
+      background:rgba(255,255,255,.03); color:var(--tt-text);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:10px; padding:8px 10px; outline:none; min-width:180px;
+    }
+    .filters input:focus,.filters select:focus{box-shadow:0 0 0 3px var(--tt-ring); border-color:transparent}
+
+    .table-wrap{overflow:auto;border-top:1px solid rgba(255,255,255,.06)}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px}
+    thead th{
+      position:sticky; top:0; z-index:1; background:rgba(17,24,39,.9);
+      backdrop-filter:saturate(140%) blur(4px);
+      text-align:left; font-weight:700; font-size:13px; letter-spacing:.3px; color:var(--tt-muted);
+      padding:12px; border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    tbody td{ padding:14px 12px; border-bottom:1px solid rgba(255,255,255,.06); vertical-align:middle; }
+    tbody tr:hover{background:rgba(255,255,255,.02)}
+    .muted{color:var(--tt-muted);font-size:12px}
+    .price{font-weight:800}
+    .tag{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.1);font-size:11px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+    .pill.ok{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.10)}
+    .pill.warn{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.10)}
+    .pill.err{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10)}
+    .grid{display:grid;gap:16px}
+    .hidden{display:none !important}
+
+    /* Small helper for thumb */
+    .prod{display:flex;align-items:center;gap:12px}
+    .prod img{width:46px;height:46px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:#0b1220}
+  </style>
+</head>
+<body onload="initAdmin()">
+  <header>
+    <a class="logo">TechTopia Admin</a>
+    <div class="header-right">
+      <div class="hdr-pill">Signed in as <strong>&nbsp;Admin</strong></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Sidebar -->
+   <aside>
+  <div class="menu-title">OVERVIEW</div>
+  <nav class="menu" id="side-menu">
+    <a href="#users" data-target="view-users" class="active">
+      👤 All Users <span class="badge" id="count-users">—</span>
+    </a>
+    <a href="#products" data-target="view-products">
+      📦 All Products <span class="badge" id="count-products">—</span>
+    </a>
+    <a href="#purchases" data-target="view-purchases">
+      🧾 All Purchases <span class="badge" id="count-purchases">—</span>
+    </a>
+  </nav>
+
+  <div style="margin-top:20px; padding:0 10px;" onclick="signOut()">
+    <a href="#" 
+       style="
+         display:block;
+         text-align:center;
+         padding:10px;
+         background:rgba(239,68,68,0.15);
+         border:1px solid rgba(239,68,68,0.4);
+         border-radius:8px;
+         color:#f87171;
+         font-weight:600;
+         text-decoration:none;
+         transition:background 0.15s ease;
+       "
+       onmouseover="this.style.background='rgba(239,68,68,0.25)'" 
+       onmouseout="this.style.background='rgba(239,68,68,0.15)'">
+      🚪 Log Out
+    </a>
+  </div>
+</aside>
+
+
+    <!-- Main -->
+    <main>
+      <!-- USERS -->
+      <section id="view-users" class="grid">
+        <div class="card">
+          <div class="toolbar">
+            <div class="title">All Users</div>
+            <div class="filters">
+              <input id="u-q" type="search" placeholder="Search name or email" oninput="filterUsers()">
+              <select id="u-verify" onchange="filterUsers()">
+                <option value="">Verification: Any</option>
+                <option value="verified">Verified</option>
+                <option value="unverified">Unverified</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:60px">ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Verification</th>
+                  <th>Joined</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section id="view-products" class="grid hidden">
+        <div class="card">
+          <div class="toolbar">
+            <div class="title">All Products</div>
+            <div class="filters">
+              <input id="p-q" type="search" placeholder="Search title, brand, model..." oninput="filterProducts()">
+              <select id="p-brand" onchange="filterProducts()"><option value="">All Brands</option></select>
+              <select id="p-quality" onchange="filterProducts()"><option value="">All Qualities</option></select>
+              <select id="p-status" onchange="filterProducts()"><option value="">All Status</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Brand / Model</th>
+                  <th>Specs</th>
+                  <th>Quality</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Seller</th>
+                </tr>
+              </thead>
+              <tbody id="products-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PURCHASES -->
+      <section id="view-purchases" class="grid hidden">
+        <div class="card">
+          <div class="toolbar">
+            <div class="title">All Purchases</div>
+            <div class="filters">
+              <input id="ph-q" type="search" placeholder="Search title, brand, buyer..." oninput="filterPurchases()">
+              <select id="ph-status" onchange="filterPurchases()"><option value="">All Order Status</option></select>
+              <select id="ph-brand" onchange="filterPurchases()"><option value="">All Brands</option></select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Brand / Model</th>
+                  <th>Quality</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Order Status</th>
+                  <th>Ordered On</th>
+                  <th>Buyer</th>
+                </tr>
+              </thead>
+              <tbody id="purchases-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/notification.js"></script>
+  <script src="assets/js/sign-out.js"></script>
+  <script>
+    // --- Helpers ---
+    const fmtMoney = (n)=> {
+      const v = Number(n||0);
+      return isFinite(v) ? v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : n;
+    };
+    const pill = (text,type)=> `<span class="pill ${type||''}">${text||'-'}</span>`;
+    const uniq = (arr)=> Array.from(new Set(arr.filter(Boolean).map(x=>String(x).trim()))).sort((a,b)=>a.localeCompare(b));
+
+    // Sidebar switching
+    function wireMenu(){
+      const links = document.querySelectorAll('#side-menu a');
+      links.forEach(a=>{
+        a.addEventListener('click', (e)=>{
+          e.preventDefault();
+          links.forEach(x=>x.classList.remove('active'));
+          a.classList.add('active');
+          document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));
+          document.getElementById(a.dataset.target).classList.remove('hidden');
+        });
+      });
+    }
+
+    // ========= USERS =========
+    async function loadAdminUsers(){
+      const popup = new Notification();
+      try{
+        const res = await fetch('LoadAllUsers');
+        if(!res.ok) throw new Error('Network error');
+        const json = await res.json(); // expect array of {id, first_name,last_name,email,verification,created_at}
+        const users = Array.isArray(json.userList) ? json.userList : [];
+
+        const tbody = document.getElementById('users-tbody');
+        tbody.innerHTML = '';
+        users.forEach(u=>{
+          const tr = document.createElement('tr');
+          const name = `${u.first_name||''} ${u.last_name||''}`.trim();
+          const verf = String(u.verification||'').toLowerCase();
+          tr.dataset.q = `${name} ${u.email||''}`.toLowerCase();
+          tr.dataset.verification = verf;
+          tr.innerHTML = `
+            <td>${u.id ?? '-'}</td>
+            <td>${name||'-'}</td>
+            <td>${u.email||'-'}</td>
+            <td>${verf==='verified' ? pill('Verified','ok') : pill('Unverified','warn')}</td>
+            <td>${u.created_at || '-'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        document.getElementById('count-users').textContent = users.length;
+      }catch(err){
+        console.error(err);
+        popup.error({message:'Failed to load users.'});
+      }
+    }
+    function filterUsers(){
+      const q = (document.getElementById('u-q').value||'').toLowerCase();
+      const v = (document.getElementById('u-verify').value||'').toLowerCase();
+      document.querySelectorAll('#users-tbody tr').forEach(r=>{
+        const mq = !q || r.dataset.q.includes(q);
+        const mv = !v || r.dataset.verification===v;
+        r.style.display = (mq && mv) ? '' : 'none';
+      });
+    }
+
+    // ========= PRODUCTS =========
+    function renderProductRow(p){
+      const brand = p?.model?.brand?.name || '-';
+      const model = p?.model?.name || '-';
+      const quality = p?.quality?.value || '-';
+      const status = p?.status?.value || '-';
+      const storage = p?.storage?.value || '-';
+      const color = p?.color?.value || '-';
+      const img = `product-images/${p.id}/image1.jpg`;
+      const seller = `${p?.user?.first_name||''} ${p?.user?.last_name||''}`.trim();
+
+      const tr = document.createElement('tr');
+      tr.dataset.q = `${p.title||''} ${brand} ${model} ${quality} ${status}`.toLowerCase();
+      tr.dataset.brand = brand.toLowerCase();
+      tr.dataset.quality = quality.toLowerCase();
+      tr.dataset.status = status.toLowerCase();
+
+      tr.innerHTML = `
+        <td>
+          <div class="prod">
+            <img src="${img}" alt="${p.title||'Product'}" onerror="this.src='assets/img/placeholder.jpg'">
+            <div>
+              <div style="font-weight:700">${p.title||'-'}</div>
+              <div class="muted">${(p.description||'').slice(0,80)}${(p.description||'').length>80?'…':''}</div>
+            </div>
+          </div>
+        </td>
+        <td><div style="font-weight:600">${brand}</div><div class="muted">${model}</div></td>
+        <td><span class="tag">${storage}</span> <span class="tag">${color}</span></td>
+        <td>${quality}</td>
+        <td class="price">$ ${fmtMoney(p.price)}</td>
+        <td>${p.qty ?? '-'}</td>
+        <td>${pill(status, status.toLowerCase().includes('active')?'ok':'warn')}</td>
+        <td>${p.createdAt || '-'}</td>
+        <td>${seller || '-'}</td>
+      `;
+      return tr;
+    }
+    async function loadAdminProducts(){
+      const popup = new Notification();
+      try{
+        const res = await fetch('LoadAllProducts');
+        if(!res.ok) throw new Error('Network error');
+        const json = await res.json(); // expect array of product objects or {products:[...]}
+       const list = Array.isArray(json.productList) ? json.productList : [];
+
+
+        const tbody = document.getElementById('products-tbody');
+        tbody.innerHTML = '';
+        list.forEach(p=> tbody.appendChild(renderProductRow(p)));
+
+        // hydrate filters
+        const brands = uniq(list.map(p=>p?.model?.brand?.name));
+        const qualities = uniq(list.map(p=>p?.quality?.value));
+        const statuses = uniq(list.map(p=>p?.status?.value));
+        const bSel = document.getElementById('p-brand');
+        const qSel = document.getElementById('p-quality');
+        const sSel = document.getElementById('p-status');
+        [bSel,qSel,sSel].forEach(sel=>{ while(sel.options.length>1) sel.remove(1); });
+        brands.forEach(v=> bSel.add(new Option(v,v)));
+        qualities.forEach(v=> qSel.add(new Option(v,v)));
+        statuses.forEach(v=> sSel.add(new Option(v,v)));
+
+        document.getElementById('count-products').textContent = list.length;
+      }catch(err){
+        console.error(err);
+        popup.error({message:'Failed to load products.'});
+      }
+    }
+    function filterProducts(){
+      const q = (document.getElementById('p-q').value||'').toLowerCase();
+      const b = (document.getElementById('p-brand').value||'').toLowerCase();
+      const ql= (document.getElementById('p-quality').value||'').toLowerCase();
+      const s = (document.getElementById('p-status').value||'').toLowerCase();
+      document.querySelectorAll('#products-tbody tr').forEach(r=>{
+        const mq = !q || r.dataset.q.includes(q);
+        const mb = !b || r.dataset.brand===b;
+        const mql= !ql|| r.dataset.quality===ql;
+        const ms = !s || r.dataset.status===s;
+        r.style.display = (mq && mb && mql && ms) ? '' : 'none';
+      });
+    }
+
+    // ========= PURCHASES =========
+    function normalizePurchaseRow(row){
+      const p = row.product || {};
+      return {
+        id: p.id,
+        title: p.title,
+        model: p.model,
+        description: p.description,
+        price: p.price,
+        qty: row.qty ?? p.qty,
+        orderedAt: row?.orders?.createdAt || p.createdAt,
+        color: p.color,
+        storage: p.storage,
+        quality: p.quality,
+        orderStatus: row.orderStatus, // {value}
+        buyer: row?.orders?.user,
+        seller: p.user
+      };
+    }
+    function renderPurchaseRow(o){
+      const brand = o?.model?.brand?.name || '-';
+      const model = o?.model?.name || '-';
+      const quality = o?.quality?.value || '-';
+      const status = o?.orderStatus?.value || '-';
+      const img = `product-images/${o.id}/image1.jpg`;
+      const buyer = `${o?.buyer?.first_name||''} ${o?.buyer?.last_name||''}`.trim();
+
+      let stClass=''; const sL=status.toLowerCase();
+      if(sL.includes('pending')) stClass='warn';
+      else if(sL.includes('cancel')||sL.includes('fail')) stClass='err';
+      else stClass='ok';
+
+      const tr = document.createElement('tr');
+      tr.dataset.q = `${o.title||''} ${brand} ${model} ${buyer} ${status}`.toLowerCase();
+      tr.dataset.status = sL;
+      tr.dataset.brand = brand.toLowerCase();
+
+      tr.innerHTML = `
+        <td>
+          <div class="prod">
+            <img src="${img}" alt="${o.title||'Product'}" onerror="this.src='assets/img/placeholder.jpg'">
+            <div>
+              <div style="font-weight:700">${o.title||'-'}</div>
+              <div class="muted">${(o.description||'').slice(0,80)}${(o.description||'').length>80?'…':''}</div>
+            </div>
+          </div>
+        </td>
+        <td><div style="font-weight:600">${brand}</div><div class="muted">${model}</div></td>
+        <td>${quality}</td>
+        <td class="price">$ ${fmtMoney(o.price)}</td>
+        <td>${o.qty ?? '-'}</td>
+        <td>${pill(status, stClass)}</td>
+        <td>${o.orderedAt || '-'}</td>
+        <td>${buyer || '-'}</td>
+      `;
+      return tr;
+    }
+    async function loadAdminPurchases(){
+      const popup = new Notification();
+      try{
+        const res = await fetch('LoadAllPurchaseHistory');
+        if(!res.ok) throw new Error('Network error');
+        const json = await res.json(); // expect {status:true, productList:[...]} like your example
+       const raw = Array.isArray(json.productList) ? json.productList : [];
+
+        const list = raw.map(normalizePurchaseRow);
+
+        const tbody = document.getElementById('purchases-tbody');
+        tbody.innerHTML = '';
+        list.forEach(o=> tbody.appendChild(renderPurchaseRow(o)));
+
+        // filters
+        const statuses = uniq(list.map(x=>x?.orderStatus?.value));
+        const brands = uniq(list.map(x=>x?.model?.brand?.name));
+        const sSel = document.getElementById('ph-status');
+        const bSel = document.getElementById('ph-brand');
+        [sSel,bSel].forEach(sel=>{ while(sel.options.length>1) sel.remove(1); });
+        statuses.forEach(v=> sSel.add(new Option(v,v)));
+        brands.forEach(v=> bSel.add(new Option(v,v)));
+
+        document.getElementById('count-purchases').textContent = list.length;
+      }catch(err){
+        console.error(err);
+        popup.error({message:'Failed to load purchases.'});
+      }
+    }
+    function filterPurchases(){
+      const q = (document.getElementById('ph-q').value||'').toLowerCase();
+      const s = (document.getElementById('ph-status').value||'').toLowerCase();
+      const b = (document.getElementById('ph-brand').value||'').toLowerCase();
+      document.querySelectorAll('#purchases-tbody tr').forEach(r=>{
+        const mq = !q || r.dataset.q.includes(q);
+        const ms = !s || r.dataset.status===s;
+        const mb = !b || r.dataset.brand===b;
+        r.style.display = (mq && ms && mb) ? '' : 'none';
+      });
+    }
+
+    // ========= INIT =========
+    async function initAdmin(){
+      wireMenu();
+      // load all lists initially; counts will show in sidebar
+      await Promise.all([
+        loadAdminUsers(),
+        loadAdminProducts(),
+        loadAdminPurchases()
+      ]);
+    }
+  </script>
+</body>
+</html>

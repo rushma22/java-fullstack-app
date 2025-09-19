@@ -1,0 +1,327 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>TechTopia - My Account</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="assets/css/notification.css">
+        <style>
+            /* === TechTopia theme (matches index.html) === */
+            :root{
+                --tt-bg:#0f172a;        /* body bg */
+                --tt-card:#111827;      /* panels/cards */
+                --tt-text:#e5e7eb;      /* primary text */
+                --tt-muted:#94a3b8;     /* secondary text */
+                --tt-accent:#22d3ee;    /* cyan accent */
+                --tt-ring:rgba(34,211,238,.35);
+                --tt-green:#a7f3d0;
+                --tt-danger:#ef4444;
+            }
+            body{
+                margin:0;
+                font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+                background:#0b1220;
+                color:var(--tt-text);
+            }
+
+            /* ===== Header (identical to index) ===== */
+            header.tt-header{
+                position:sticky;
+                top:0;
+                z-index:40;
+                background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.90));
+                border-bottom:1px solid rgba(255,255,255,.06);
+                backdrop-filter:blur(8px) saturate(140%);
+            }
+            .tt-wrap{
+                max-width:1200px;
+                margin:0 auto;
+                padding:14px 18px;
+                display:flex;
+                align-items:center;
+                justify-content:space-between;
+            }
+            .tt-logo{
+                color:var(--tt-text);
+                font-weight:800;
+                font-size:20px;
+                text-decoration:none;
+                letter-spacing:.3px;
+            }
+            .tt-logo::after{
+                content:"";
+                display:inline-block;
+                margin-left:.5rem;
+                width:.5rem;
+                height:.5rem;
+                border-radius:50%;
+                background:var(--tt-accent);
+                box-shadow:0 0 10px var(--tt-accent);
+            }
+            nav ul{
+                display:flex;
+                gap:8px;
+                margin:0;
+                padding:0;
+                list-style:none;
+            }
+            nav a{
+                color:var(--tt-text);
+                text-decoration:none;
+                font-weight:600;
+                padding:9px 12px;
+                border-radius:10px;
+                border:1px solid rgba(255,255,255,.06);
+                background:rgba(255,255,255,.02);
+                transition:background .15s ease, transform .15s ease, box-shadow .15s ease;
+            }
+            nav a:hover{
+                background:rgba(34,211,238,.10);
+                transform:translateY(-1px);
+            }
+            nav a.active{
+                background:rgba(34,211,238,.18);
+                box-shadow:0 0 0 3px var(--tt-ring) inset;
+            }
+
+            /* ===== Page Container ===== */
+            .page-wrap{
+                max-width:1200px;
+                margin:24px auto;
+                padding:0 20px;
+            }
+
+            /* ===== Card ===== */
+            .axil-dashboard-account{
+                background:var(--tt-card);
+                padding:24px;
+                border-radius:14px;
+                border:1px solid rgba(255,255,255,.06);
+                box-shadow:0 10px 30px rgba(0,0,0,.25);
+                max-width:900px;
+                margin:0 auto;
+            }
+
+            .text-success{
+                color:var(--tt-green)!important;
+                font-weight:600;
+                margin-bottom:10px;
+            }
+            .text-danger{
+                color:var(--tt-danger)!important;
+                font-weight:600;
+                margin-bottom:10px;
+            }
+
+            .row{
+                display:flex;
+                flex-wrap:wrap;
+                gap:18px;
+            }
+            .col-lg-6{
+                flex:1 1 calc(50% - 18px);
+            }
+            .col-12{
+                flex:1 1 100%;
+            }
+
+            .axil-dashboard-account .form-group{
+                margin-bottom:14px;
+                display:flex;
+                flex-direction:column;
+            }
+            .axil-dashboard-account .form-group label{
+                font-weight:700;
+                margin-bottom:6px;
+                color:var(--tt-text);
+            }
+
+            .form-control{
+                border-radius:10px;
+                border:1px solid rgba(255,255,255,.10);
+                padding:10px 12px;
+                font-size:15px;
+                background:rgba(255,255,255,.03);
+                color:var(--tt-text);
+                outline:none;
+            }
+            .form-control:focus{
+                border-color:transparent;
+                box-shadow:0 0 0 3px var(--tt-ring);
+            }
+
+            h5.title{
+                font-size:18px;
+                color:var(--tt-text);
+                margin:18px 0 8px;
+                font-weight:800;
+                border-top:1px solid rgba(255,255,255,.06);
+                padding-top:16px;
+            }
+
+            .axil-btn.btn-primary{
+                background:var(--tt-accent);
+                color:#001017;
+                font-weight:800;
+                border:none;
+                border-radius:10px;
+                padding:10px 14px;
+                cursor:pointer;
+                min-width:120px;
+                transition:filter .15s ease;
+            }
+            .axil-btn.btn-primary:hover{
+                filter:brightness(1.08);
+            }
+
+            @media (max-width:768px){
+                .col-lg-6{
+                    flex-basis:100%;
+                }
+            }
+        </style>
+    </head>
+
+    <body onload="loadData();">
+        <!-- ===== Header ===== -->
+        <header class="tt-header" id="main-header">
+            <div class="tt-wrap">
+                <a href="index.html" class="tt-logo" aria-label="TechTopia Home">TechTopia</a>
+                <nav aria-label="Primary">
+                    <ul>
+                        <li><a id="nav-home" href="index.html">Home</a></li>
+                        <li><a id="nav-profile" href="profile.html">My Profile</a></li>
+                        <li><a id="nav-search" href="search.html">Search</a></li>
+                        <li><a id="nav-cart" href="cart.html">My Cart</a></li>
+                        <li><a id="nav-about" href="about.html">About Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <div class="page-wrap">
+            <div class="axil-dashboard-account">
+                <p class="text-danger" id="message"></p>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input id="firstName" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input id="lastName" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="lineOne">Address Line One</label>
+                            <input id="lineOne" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="lineTwo">Address Line Two</label>
+                            <input id="lineTwo" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="postalCode">Postal Code</label>
+                            <input id="postalCode" type="text" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="citySelect">City</label>
+                            <select id="citySelect" class="form-control">
+                                <option value="0">Select</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <h5 class="title">Password Change</h5>
+
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input readonly id="currentPassword" type="password" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input id="newPassword" type="password" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input id="confirmPassword" type="password" class="form-control" />
+                        </div>
+
+                        <div class="form-group" style="margin-top:8px;">
+                            <button class="axil-btn btn-primary" onclick="saveChanges()">Save</button>
+                        </div>
+                        <div class="form-group" style="margin-top:8px;">
+                            <button class="axil-btn btn-primary">
+                                <a href="add-product.html" style="text-decoration:none; color:inherit;">Add Product</a>
+                            </button>
+                        </div>
+
+                        <div class="form-group" style="margin-top:8px;">
+                            <button class="axil-btn btn-primary">
+                                <a href="my-products.html" style="text-decoration:none; color:inherit;">My Products</a>
+                            </button>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top:8px;">
+                            <button class="axil-btn btn-primary">
+                                <a href="purchased-history.html" style="text-decoration:none; color:inherit;">My Purchased History</a>
+                            </button>
+                        </div>
+
+                        <div class="form-group" style="margin-top:8px;">
+                            <button class="axil-btn btn-primary" onclick="signOut()">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer style="background:rgba(15,23,42,.9);color:var(--tt-text);text-align:center;padding:1rem;margin-top:2rem;">
+            <p>&copy; 2025 TechTopia. All rights reserved.</p>
+        </footer>
+
+        <!-- Keep your existing script file & function names -->
+        <script src="assets/js/my-account.js"></script>
+        <script>
+                         // Active nav highlight (same behavior as other pages)
+                         (function () {
+                             const file = (location.pathname.split('/').pop() || '').toLowerCase();
+                             const map = {
+                                 'index.html': 'nav-home',
+                                 'search.html': 'nav-search', // if this file is profile.html
+                                 'my-account.html': 'nav-profile', // if saved as my-account.html
+                                 'about.html': 'nav-about',
+                                 'cart.html': 'nav-cart',
+                             };
+                             const id = map[file];
+                             if (id) {
+                                 const el = document.getElementById(id);
+                                 if (el)
+                                     el.classList.add('active');
+                             }
+                         })();
+        </script>
+        <script src="assets/js/sign-out.js"></script>
+        <script src="assets/js/notification.js"></script>
+    </body>
+</html>

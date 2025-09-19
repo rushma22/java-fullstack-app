@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechTopia - About Us</title>
+
+  <style>
+    /* === TechTopia theme (same as your site) === */
+    :root{
+      --tt-bg:#0f172a;        /* body bg */
+      --tt-card:#111827;      /* panels/cards */
+      --tt-text:#e5e7eb;      /* primary text */
+      --tt-muted:#94a3b8;     /* secondary text */
+      --tt-accent:#22d3ee;    /* cyan accent */
+      --tt-ring:rgba(34,211,238,.35);
+      --tt-green:#a7f3d0;
+    }
+    body{
+      margin:0;
+      font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+      background:#0b1220;
+      color:var(--tt-text);
+    }
+
+    /* ===== Header ===== */
+    header.tt-header{
+      position:sticky; top:0; z-index:40;
+      background:linear-gradient(180deg, rgba(15,23,42,.98), rgba(15,23,42,.90));
+      border-bottom:1px solid rgba(255,255,255,.06);
+      backdrop-filter:blur(8px) saturate(140%);
+    }
+    .tt-wrap{ max-width:1200px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
+    .tt-logo{ color:var(--tt-text); font-weight:800; font-size:20px; text-decoration:none; letter-spacing:.3px; }
+    .tt-logo::after{ content:""; display:inline-block; margin-left:.5rem; width:.5rem; height:.5rem; border-radius:50%; background:var(--tt-accent); box-shadow:0 0 10px var(--tt-accent); }
+    nav ul{ display:flex; gap:8px; margin:0; padding:0; list-style:none; }
+    nav a{
+      color:var(--tt-text); text-decoration:none; font-weight:600;
+      padding:9px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.02);
+      transition:background .15s ease, transform .15s ease, box-shadow .15s ease;
+    }
+    nav a:hover{ background:rgba(34,211,238,.10); transform:translateY(-1px); }
+    nav a.active{ background:rgba(34,211,238,.18); box-shadow:0 0 0 3px var(--tt-ring) inset; }
+
+    /* ===== Layout helpers ===== */
+    .container{ max-width:1200px; margin:0 auto; padding:24px 18px; }
+
+    /* ===== Hero ===== */
+    .hero{
+      padding:48px 18px 18px;
+      text-align:center;
+      background:radial-gradient(1200px 400px at 50% -10%, rgba(34,211,238,.15), transparent 60%);
+    }
+    .hero h1{ margin:0 0 8px; font-size:clamp(26px,4vw,36px); font-weight:900; letter-spacing:.3px; }
+    .hero p{ margin:0 auto; max-width:760px; color:var(--tt-muted); font-size:1rem; }
+
+    /* ===== Feature cards ===== */
+    .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:16px; }
+    .card{
+      grid-column:span 12; background:var(--tt-card);
+      border:1px solid rgba(255,255,255,.06); border-radius:16px; padding:18px;
+    }
+    .card h3{ margin:0 0 6px; font-size:1.1rem; }
+    .card p{ margin:0; color:var(--tt-muted); }
+    @media (min-width:700px){
+      .card.third{ grid-column:span 4; }
+      .card.half{ grid-column:span 6; }
+    }
+
+    /* ===== Stats ===== */
+    .stats{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:10px; }
+    .stat{
+      background:linear-gradient(180deg, rgba(17,24,39,.7), rgba(17,24,39,.4));
+      border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:16px; text-align:center;
+    }
+    .stat .num{ font-size:1.6rem; font-weight:900; color:var(--tt-green); }
+    .stat .label{ color:var(--tt-muted); }
+    @media (min-width:700px){ .stats{ grid-template-columns:repeat(4,1fr); } }
+
+    /* ===== Timeline ===== */
+    .timeline{ position:relative; padding-left:18px; }
+    .timeline::before{
+      content:""; position:absolute; left:8px; top:0; bottom:0; width:2px; background:rgba(255,255,255,.08);
+    }
+    .milestone{ margin:14px 0 14px 0; position:relative; padding-left:12px; }
+    .milestone::before{
+      content:""; position:absolute; left:-2px; top:.35rem; width:10px; height:10px; border-radius:50%;
+      background:var(--tt-accent); box-shadow:0 0 10px var(--tt-accent);
+    }
+    .milestone h4{ margin:0 0 4px; font-size:1rem; }
+    .milestone p{ margin:0; color:var(--tt-muted); }
+
+    /* ===== CTA ===== */
+    .cta{
+      margin-top:24px; text-align:center; padding:22px;
+      background:linear-gradient(180deg, rgba(17,24,39,.6), rgba(17,24,39,.35));
+      border:1px solid rgba(255,255,255,.06); border-radius:16px;
+    }
+    .cta .btn{
+      display:inline-block; margin-top:10px; padding:10px 14px; border-radius:12px;
+      background:var(--tt-accent); color:#001017; text-decoration:none; font-weight:800;
+    }
+    .cta .btn:hover{ filter:brightness(1.07); }
+
+    footer{
+      background:rgba(15,23,42,.9); color:var(--tt-text); text-align:center; padding:14px; margin-top:26px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="tt-header">
+    <div class="tt-wrap">
+      <a href="index.html" class="tt-logo" aria-label="TechTopia Home">TechTopia</a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a id="nav-home" href="index.html">Home</a></li>
+          <li><a id="nav-profile" href="my-account.html">My Profile</a></li>
+            <li><a id="nav-search" href="search.html">Search</a></li>
+            <li><a id="nav-cart" href="cart.html">My Cart</a></li>
+          <li><a id="nav-about" href="about.html">About Us</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>About TechTopia</h1>
+    <p>We’re a small crew obsessed with great hardware and a smooth shopping experience. From curated brands to tidy UI, TechTopia is where clean design meets powerful tech.</p>
+  </section>
+
+  <main class="container">
+    <!-- Mission -->
+    <section class="grid" aria-labelledby="mission-title">
+      <article class="card half">
+        <h3 id="mission-title">Our Mission</h3>
+        <p>Make buying tech simple and delightful. We group products by brand, surface the details that matter, and keep performance snappy—without breaking your backend.</p>
+      </article>
+      <article class="card half">
+        <h3>What We Value</h3>
+        <p>Speed, clarity, and trust. Clear prices, real stock levels, and designs that don’t get in your way.</p>
+      </article>
+    </section>
+
+    <!-- Highlights -->
+    <section class="grid" style="margin-top:16px" aria-label="Highlights">
+      <article class="card third">
+        <h3>Quality Brands</h3>
+        <p>Carefully organized by brand so you can compare models fast.</p>
+      </article>
+      <article class="card third">
+        <h3>Smart Search</h3>
+        <p>Filter by condition, color, storage, and price—no fuss.</p>
+      </article>
+      <article class="card third">
+        <h3>Secure Cart</h3>
+        <p>Friction‑free checkout and verified sessions to keep orders safe.</p>
+      </article>
+    </section>
+
+    <!-- Stats -->
+    <section style="margin-top:16px" aria-label="Site stats">
+      <div class="card">
+        <h3 style="margin:0 0 10px;">By the Numbers</h3>
+        <div class="stats">
+          <div class="stat">
+            <div class="num" id="stat-products">500+</div>
+            <div class="label">Products</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="stat-brands">20+</div>
+            <div class="label">Brands</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="stat-users">10k+</div>
+            <div class="label">Happy Users</div>
+          </div>
+          <div class="stat">
+            <div class="num" id="stat-speed">~200ms</div>
+            <div class="label">Avg. Response</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section style="margin-top:16px" aria-labelledby="story-title">
+      <div class="card">
+        <h3 id="story-title" style="margin:0 0 10px;">Our Story</h3>
+        <div class="timeline">
+          <div class="milestone">
+            <h4>2024 — The Spark</h4>
+            <p>We started by cleaning up a messy front‑end while keeping backend IDs untouched.</p>
+          </div>
+          <div class="milestone">
+            <h4>2025 — TechTopia</h4>
+            <p>Unified theme, faster pages, and a brand‑first catalog experience.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" aria-label="Contact CTA">
+      <h3 style="margin:0;">Have a question or partnership idea?</h3>
+      <p style="margin:.4rem 0 0; color:var(--tt-muted);">We’d love to hear from you.</p>
+      <a class="btn" href="mailto:hello@techtopia.example">Contact Us</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 TechTopia. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Active nav highlight (same behavior as other pages)
+    (function(){
+      const file = (location.pathname.split('/').pop() || '').toLowerCase();
+      const map = { 'index.html':'nav-home', 'my-account.html':'nav-profile','search.html':'nav-search','cart.html':'nav-cart', 'about.html':'nav-about' };
+      const id = map[file]; if(id){ const el = document.getElementById(id); if(el) el.classList.add('active'); }
+    })();
+  </script>
+</body>
+</html>
